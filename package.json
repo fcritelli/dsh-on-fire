@@ -23,10 +23,20 @@
     "cordis.patch.yml",
     "assets",
     "install",
+    "test",
     "docs",
     "README.md"
   ],
   "license": "MIT",
+  "author": "fcritelli",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fcritelli/dsh-on-fire.git"
+  },
+  "homepage": "https://github.com/fcritelli/dsh-on-fire#readme",
+  "bugs": {
+    "url": "https://github.com/fcritelli/dsh-on-fire/issues"
+  },
   "scripts": {
     "test": "node test/verificar.mjs"
   },

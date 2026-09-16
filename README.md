@@ -37,14 +37,14 @@ com o motivo — estão em [`docs/AVALIACOES.md`](./docs/AVALIACOES.md).
 Precisa do `pnpm` no PATH — `dsh plugin` repassa os argumentos para ele no diretório do perfil.
 
 ```bash
-# 1. instalar o bundle no perfil
-dsh plugin --profile web add /caminho/para/dsh-on-fire
+# 1. instalar o bundle no perfil — direto do GitHub
+dsh plugin --profile web add git+https://github.com/fcritelli/dsh-on-fire.git
 
-# 2. (opcional) adaptar os caminhos dos MCP a esta máquina
-./install/ajustar-caminhos.sh
-
-# 3. (opcional) instalar o graphify e o wrapper da chave
-./install/instalar-graphify.sh
+# 2 e 3. (opcionais) os scripts de instalação vivem no REPOSITÓRIO, não no seu diretório,
+# porque o passo 1 só copia o pacote para dentro do perfil.
+git clone https://github.com/fcritelli/dsh-on-fire && cd dsh-on-fire
+./install/ajustar-caminhos.sh    # adapta os caminhos dos MCP a esta máquina
+./install/instalar-graphify.sh   # instala o graphify e o wrapper da chave
 
 # 4. reiniciar o DSH
 ```
@@ -62,7 +62,7 @@ Os passos 2 e 3 são opcionais e independentes: sem eles, o bundle funciona, mas
 # as rows do bundle entraram na configuração composta?
 dsh --profile web --dump-config | grep -A3 'dsh-on-fire'
 
-# o plugin registra o que deveria? (roda sem DSH, com um contexto falso)
+# o plugin registra o que deveria? (roda sem DSH, com um contexto falso — precisa do clone)
 node test/verificar.mjs
 ```
 
