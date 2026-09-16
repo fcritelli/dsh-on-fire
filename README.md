@@ -56,6 +56,11 @@ editar `package.json` à mão.
 Os passos 2 e 3 são opcionais e independentes: sem eles, o bundle funciona, mas os MCP caem nos
 `command` portáveis do bundle (`graphify-mcp`, `npx`) e o graphify não terá a chave do Gemini.
 
+O `pnpm` avisa `missing peer @deepseek-ai/cordis` e `missing peer @deepseek-ai/dsh-skill`. O aviso é
+esperado e inofensivo: o `dsh-base` já traz esses dois pacotes na árvore do perfil, e é de lá que o
+`dsh-on-fire` os resolve em tempo de execução. Verificado instalando do GitHub num perfil limpo e
+bootando: as quatro regras e as quatro skills invocáveis carregam.
+
 ### Verificar
 
 ```bash
