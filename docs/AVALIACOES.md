@@ -19,7 +19,7 @@ sim/não, e quase sempre a ideia sobrevive mesmo quando o pacote não.
 | `ruvnet/ruflo` | rejeitado | 353 tools MCP ≈ 65.663 tokens por requisição |
 | `alexgreensh/token-optimizer` | rejeitado | licença PolyForm Noncommercial |
 | `addyosmani/agent-skills` | rejeitado como catálogo | ~2.421 tokens de catálogo para pouco uso |
-| `DietrichGebert/ponytail` | **não testado** | promissor, mas sem A/B próprio ainda |
+| `DietrichGebert/ponytail` | rejeitado | A/B próprio: o prompt de 7 palavras bate a skill |
 
 ---
 
@@ -145,17 +145,38 @@ entregá-la) e `constraint-driven-development` (partir das restrições, não da
 
 ---
 
-## Não testados
+### `DietrichGebert/ponytail` — rejeitado, depois de A/B próprio
 
-### `DietrichGebert/ponytail` — promissor, sem A/B próprio
+MIT, skill autocontida, e o benchmark do autor é o melhor construído desta lista: tem braço de
+controle, testa o próprio contra-argumento, e publica uma correção depois de achar um bug de
+contaminação nos números dele. Foi por isso que valeu repetir a medição em vez de aceitar a dele.
 
-MIT, skill autocontida de 120 linhas, com benchmark que **tem braço de controle**: −54% de linhas de
-código, −22% de tokens, 100% de segurança nos casos testados. Aplicaria limpo neste bundle, pelo
-mesmo mecanismo das outras skills.
+**O que eu medi.** 6 tarefas com armadilha de over-build e resposta na stdlib, 3 braços (sem nada /
+ponytail / o prompt de sete palavras deles), 3 corridas cada, 54 sessões headless. Cada tarefa com
+checagem comportamental — o benchmark deles não executa o código no eixo 1 — e checagem de
+contaminação por sessão. Relatório completo em `~/Work/ponytail-experimento/RELATORIO.md`.
 
-**Por que não está aqui.** O benchmark é do autor, não meu. Todos os outros veredictos desta lista
-saem de medição própria; aceitar este sem repetir seria abrir exceção justamente no método que dá
-valor ao resto. Fica como candidato ao primeiro A/B da próxima rodada.
+**O que se sustentou.** O mecanismo é real, e a magnitude deles se reproduz onde a armadilha é grande:
+na tarefa análoga ao date picker deles, −52% aqui contra −54% lá. E nenhum braço derrubou a guarda de
+segurança (3/3 em todos), o que confirma o achado de 100% deles.
+
+**Por que caiu.** O prompt de sete palavras bateu a skill em todas as 6 tarefas: −55% contra −29%. E o
+diferencial **total** do ponytail ficou maior que o do baseline (+37%), porque o ruleset dele manda
+deixar uma checagem executável e ele obedeceu em 12 das 18 corridas, somando 13,5 linhas de teste que
+nenhum outro braço escreveu. Custo de conversa +37%, contra −8% do controle.
+
+**Ressalva honesta, e ela é grande.** Minhas tarefas são cirúrgicas, de 5 a 30 linhas, e os ganhos
+deles vêm justamente de armadilhas grandes. É plausível que eu tenha medido o ponytail **fora da faixa
+para a qual ele foi calibrado**, e um negativo ali não é um negativo sobre ele. Somam-se o modelo
+diferente (`deepseek-flash` contra o Haiku 4.5 deles, e a nota deles de que o efeito depende do
+modelo) e o `n=3`. Este é o teste mais fraco desta lista, não o mais conclusivo.
+
+**O que ficou de valor não foi o veredicto.** Foi descobrir que o modo de falha de "escrever menos" —
+cortar o que a especificação exige — é real e **não** fica onde a gente espera: apareceu numa tarefa
+comum, não na de segurança, e só depois de eu endurecer o instrumento. A primeira versão da minha
+checagem reinterpretava a string produzida com `URLSearchParams`, o que **normalizava o defeito que
+ela deveria pegar**; duas corridas passavam com query string sem codificação nenhuma. Uma checagem
+que normaliza o defeito é pior que checagem nenhuma, porque dá confiança.
 
 ---
 
