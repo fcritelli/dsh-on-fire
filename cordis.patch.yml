@@ -1,0 +1,56 @@
+# Patch do bundle `dsh-on-fire`, aplicado como UMA camada sobre o perfil.
+#
+# Uma camada de bundle é aplicada ANTES do patch do usuário
+# (`~/.dsh/profiles/<perfil>/cordis.patch.yml`) e antes do patch do DSH home
+# (`~/.dsh/cordis.patch.yml`). Então tudo aqui é **padrão**: para trocar qualquer
+# valor, o usuário mira a row por id numa camada posterior e a última escrita vence.
+#
+# Cuidado ao mirar por id: um patch substitui a `config` INTEIRA da row, não faz merge.
+# Para trocar só o `command` do graphify, é preciso reescrever o bloco completo.
+
+- insert:
+    # ── as melhorias do bundle ────────────────────────────────────────────────
+    # Regras de prompt + skills. Cada toggle é independente; ver docs/MELHORIAS.md.
+    - id: on-fire
+      name: 'dsh-on-fire'
+      config:
+        idioma: true
+        espera: true
+        graphify: true
+        adhd: true
+        skills: true
+        skillsDesativadas: []
+
+    # ── servidores MCP ────────────────────────────────────────────────────────
+    # Os `command` abaixo são portáveis de propósito (nome no PATH, sem caminho
+    # absoluto e sem usuário). O PATH do host do DSH costuma ser mínimo, então em
+    # algumas máquinas o nome não resolve: nesse caso o `install/ajustar-caminhos.sh`
+    # grava um override com o caminho absoluto na sua camada de usuário.
+    #
+    # `failOnStartupError: false` mantém o DSH de pé quando o servidor não sobe —
+    # o custo é falhar em silêncio, então confira a lista de tools depois de instalar.
+
+    # Grafo de conhecimento do código. Os tools aparecem como `mcp__graphify__*` e
+    # funcionam em modo multi-projeto: cada chamada recebe `project_path` com o caminho
+    # absoluto da raiz do workspace. Sem `project_path` a chamada falha de propósito.
+    - id: mcp-graphify
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: graphify
+        transport: stdio
+        command: graphify-mcp
+        args: ['--transport', 'stdio']
+        toolCallTimeoutMs: 120000
+        failOnStartupError: false
+
+    # Apoio à conformidade com a LGPD (Lei 13.709/2018). Tools em `mcp__lgpd__*`.
+    # Auxiliar: NÃO substitui assessoria jurídica.
+    - id: mcp-lgpd
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: lgpd
+        transport: stdio
+        command: npx
+        args: ['-y', '@lordmendes/lgpd-mcp']
+        toolCallTimeoutMs: 60000
+        failOnStartupError: false
