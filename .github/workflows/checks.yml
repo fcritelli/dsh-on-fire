@@ -1,0 +1,66 @@
+name: checks
+
+# Every one of these would have caught a defect that shipped: `pnpm test` catches the
+# script pointing at a renamed file, the shell syntax check catches a broken install
+# script, and parsing the YAML catches a malformed patch layer.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Bundle test and reference check
+        run: pnpm test
+
+      - name: Install scripts parse
+        run: |
+          for script in install/*.sh; do
+            bash -n "$script"
+          done
+
+      - name: cordis.patch.yml and package.json are valid
+        run: |
+          node --input-type=module -e "
+            import { readFileSync } from 'node:fs';
+            import { parse } from 'yaml';
+            const patch = parse(readFileSync('cordis.patch.yml', 'utf8'));
+            if (!Array.isArray(patch) || patch.length === 0) throw new Error('cordis.patch.yml is not a non-empty array of patch entries');
+            const ids = patch.flatMap((entry) => (entry.insert ?? []).map((row) => row.id));
+            const seen = new Set();
+            for (const id of ids) {
+              if (seen.has(id)) throw new Error('duplicate row id in cordis.patch.yml: ' + id);
+              seen.add(id);
+            }
+            JSON.parse(readFileSync('package.json', 'utf8'));
+            console.log('cordis.patch.yml ok — rows: ' + ids.join(', '));
+          "
+
+      - name: Every skill directory has a SKILL.md
+        run: |
+          for dir in assets/skills/*/; do
+            test -f "$dir/SKILL.md" || { echo "missing $dir/SKILL.md"; exit 1; }
+          done
+
+      - name: The four rule files still exist
+        run: |
+          for rule in language waiting graphify adhd; do
+            test -f "assets/rules/$rule.md" || { echo "missing assets/rules/$rule.md"; exit 1; }
+          done

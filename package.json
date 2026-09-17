@@ -38,7 +38,7 @@
     "url": "https://github.com/fcritelli/dsh-on-fire/issues"
   },
   "scripts": {
-    "test": "node test/verify.mjs"
+    "test": "node test/verify.mjs && node test/check-references.mjs"
   },
   "dsh": {
     "bundle": {
