@@ -144,6 +144,12 @@ os itens** — o agente escreve `- [ ]`, o revisor marca `- [x]`. Sem isso os cr
 prova. Fica em `docs/superpowers/revisoes/`, e serve para revisar um plano antigo, não só um recém
 escrito.
 
+Uma skill só dispara se o modelo julgar que a descrição dela casa com a situação, e esse é o elo
+fraco — nada no sistema obriga o passo. Por isso o `planos-de-implementacao` aponta para ela no
+self-review antes de entregar, e o `execucao-de-planos` nos pré-requisitos: o ponteiro vem de uma
+skill que já está carregada naquele exato momento, o que é mais confiável que esperar que a entrada
+do catálogo seja notada no meio de uma dúzia.
+
 **`browser-harness`** — toda interação web: automação, scraping, teste, trabalho em site ou app.
 São 228 linhas mais nove arquivos em `references/`, porque a versão longa é carregada sob demanda e
 só a descrição entra sempre no contexto. Dez dos dezoito documentos de interação do projeto original

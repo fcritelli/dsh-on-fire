@@ -132,6 +132,13 @@ Rode você mesmo, sem despachar subagente:
 3. **Consistência de nomes** — um `clearLayers()` na Task 3 e `clearFullLayers()` na
    Task 7 é bug. Iguale.
 
+Esses três passos são você conferindo o seu próprio trabalho, e quem confere o próprio
+trabalho não acha o que não sabe que errou. Para a revisão que separa quem escreve de quem
+julga, use a skill `qualidade-do-plano`: ela produz uma checklist sobre o **texto** do plano —
+completeza, clareza, consistência, cobertura, casos de borda — e a regra é que **quem marca
+os itens é o revisor**, nunca você. Diga ao usuário que ela existe e entregue os itens em
+aberto; não marque nenhum.
+
 ## Reconciliação com o plan mode
 
 Quando o plan mode estiver ativo, há **uma autoridade só**, e não são duas:

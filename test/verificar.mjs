@@ -133,6 +133,20 @@ caso("registra o provedor e lista as 6 skills com rank 600 (bundled)", async () 
 	);
 });
 
+caso("não guarda o catálogo em cache — list() relê o disco", async () => {
+	const { ctx, provedores } = contextoFalso();
+	apply(ctx, configPadrao());
+	const primeira = await provedores[0].list();
+	const segunda = await provedores[0].list();
+	// A mesma referência entregaria um catálogo velho depois de mexer no pacote — foi assim que
+	// uma skill recém-acrescentada ficou invisível numa sessão em andamento.
+	assert.notEqual(primeira, segunda, "a mesma referência indica catálogo em cache");
+	assert.deepEqual(
+		primeira.map((c) => c.name),
+		segunda.map((c) => c.name)
+	);
+});
+
 caso("get() devolve o corpo sem o frontmatter", async () => {
 	const { ctx, provedores } = contextoFalso();
 	apply(ctx, configPadrao());

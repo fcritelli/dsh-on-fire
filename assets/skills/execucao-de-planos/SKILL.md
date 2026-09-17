@@ -16,6 +16,10 @@ ele é **versionado**.
    implementação em `main`/`master` sem consentimento explícito.
 3. Leia o plano **uma vez**. Se ele citar um spec, leia o spec também: é a autoridade da
    qual o plano argumenta, e conflito dentro do plano se resolve contra o spec.
+4. O plano passou pela skill `qualidade-do-plano`. Se não passou, rode-a **antes** de
+   despachar a primeira tarefa: requisito ambíguo não é resolvido pelo implementador, é
+   adivinhado por ele — e cada tarefa adivinha de um jeito. A checklist é sobre o texto do
+   plano, e quem marca os itens é o revisor.
 
 ## O ledger — versionado
 
