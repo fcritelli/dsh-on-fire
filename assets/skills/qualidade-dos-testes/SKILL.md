@@ -37,7 +37,9 @@ import re, sys, pathlib
 
 raiz = pathlib.Path(sys.argv[1])
 testes, fonte = [], []
-for p in raiz.rglob("*.ts"):
+# .ts E .tsx: um `rglob("*.[t]sx")` casa SÓ .tsx e deixa todo o fonte .ts invisível, o que
+# transforma cada campo legítimo em fantasma. Foi exatamente esse o erro na primeira versão.
+for p in list(raiz.rglob("*.ts")) + list(raiz.rglob("*.tsx")):
     s = str(p)
     if "node_modules" in s or "/dist/" in s or ".worktrees" in s:
         continue
@@ -49,11 +51,14 @@ ident = set(re.findall(r"[A-Za-z_][A-Za-z0-9_]*",
 # A chave precisa de `:` depois (senão valores como `Maria` entram), e o lookbehind evita
 # casar pedaço de outra palavra — sem ele o `T09` de `2026-01-01T09:00:00` entra como campo.
 CHAVE = re.compile(r"(?<![A-Za-z0-9_])([A-Za-z_][A-Za-z0-9_]*)\s*:")
+# `.body` também é o do DOM: sem esta lista, `document.body.innerHTML` vira "campo fantasma".
+API_DOM = {"innerHTML", "textContent", "className", "outerHTML", "innerText",
+           "style", "dataset", "tagName", "nodeType"}
 
 susp = {}
 for t in testes:
     txt = t.read_text(errors="ignore")
-    campos = set(re.findall(r"\.body\.([A-Za-z_][A-Za-z0-9_]*)", txt))
+    campos = set(re.findall(r"\.body\.([A-Za-z_][A-Za-z0-9_]*)", txt)) - API_DOM
     for bloco in re.findall(r"(?:toMatchObject|objectContaining)\(\{([^}]*)\}", txt, re.S):
         campos |= set(CHAVE.findall(bloco))
     for c in campos:
@@ -67,11 +72,15 @@ for c, arqs in sorted(susp.items(), key=lambda kv: -len(kv[1])):
     print(f"  {c:34} em {len(arqs)}: {', '.join(sorted(set(arqs))[:4])}")
 ```
 
-**Isto gera candidatos, não veredictos.** Três coisas que a experiência mostrou:
+**Isto gera candidatos, não veredictos.** Cinco formas de ele mentir, todas já observadas:
 
 1. Um stub que o teste monta de propósito só existe no teste, e ali o campo é legítimo.
 2. Sem o `:` obrigatório, o scan captura valores em vez de chaves, e vira ruído.
-3. Sem o lookbehind, ele morde pedaços de timestamp.
+3. Sem o lookbehind, ele morde pedaços de timestamp — `T09` saiu de `2026-01-01T09:00:00`.
+4. Cobrindo só `.ts`, ele ignora todo teste `.tsx`: num repositório isso foi 41 de 235 arquivos.
+5. Um `rglob("*.[t]sx")` parece cobrir os dois e cobre só `.tsx` — aí o **fonte** `.ts` fica
+   invisível e todo campo vira fantasma. Errar para o lado do ruído é pior que errar para o lado
+   do silêncio, porque o ruído parece achado.
 
 Cada hit precisa de conferida no fonte. E o scan só pega o caso grosseiro: um valor hardcoded num
 helper passa por ele sempre que o nome do campo também existe no servidor. Para esses, a única
