@@ -87,7 +87,7 @@ concrete inspection — no "works well" and no "handles the cases".
 - Create: `exact/path/file.ts`
 - Modify: `exact/path/existing.ts:123-145`
 - Test: `exact/path/test.test.ts`
-- Report: `docs/superpowers/ledgers/<plan>/reports/task-N.md`
+- Report: `docs/superpowers/ledgers/<plan-name>/reports/task-N.md`
 
 > The **Report** field exists so execution does not return prose into the coordinator's
 > context: the subagent writes the report into that file and returns only the path. We

@@ -25,6 +25,11 @@ is **versioned**.
 
 `docs/superpowers/ledgers/<plan-name>.md`
 
+The subagent reports live in a sibling directory with the same base name,
+`docs/superpowers/ledgers/<plan-name>/reports/task-N.md` — that directory is what this text
+calls `<ledger-workspace>` below. The ledger is a **file**, the reports are a **directory**
+next to it, never one inside the other.
+
 **Do not** use `.superpowers/sdd/` or a git-ignored directory: the ledger is the record of
 the work's decisions and evidence, and it has to survive `git clean -fdx`, a machine change
 and someone else's review. The ledger is committed together with the code.
