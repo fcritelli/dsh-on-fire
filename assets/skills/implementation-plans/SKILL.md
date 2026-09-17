@@ -11,7 +11,7 @@ specification of what must exist at the end.
 
 ## Where the plan lives
 
-`docs/superpowers/plans/<YYYY-MM-DD>-<feature-name>.md`
+`docs/engineering/plans/<YYYY-MM-DD>-<feature-name>.md`
 
 One plan per feature. If a plan for the same day and subject already exists, **update it**
 instead of creating a second one.
@@ -87,7 +87,7 @@ concrete inspection — no "works well" and no "handles the cases".
 - Create: `exact/path/file.ts`
 - Modify: `exact/path/existing.ts:123-145`
 - Test: `exact/path/test.test.ts`
-- Report: `docs/superpowers/ledgers/<plan-name>/reports/task-N.md`
+- Report: `docs/engineering/ledgers/<plan-name>/reports/task-N.md`
 
 > The **Report** field exists so execution does not return prose into the coordinator's
 > context: the subagent writes the report into that file and returns only the path. We
@@ -150,7 +150,7 @@ When plan mode is active, there is **a single authority**, and it is not two:
    Do not use `todo_write` to track planning; it serves execution, after the plan is
    approved.
 3. **After approval**, write the same content to
-   `docs/superpowers/plans/<date>-<name>.md`.
+   `docs/engineering/plans/<date>-<name>.md`.
 
 That is: `exit_plan_mode` is the **approval channel**; the file is the **persistent
 record**. The content is the same — never keep two diverging versions.

@@ -46,7 +46,7 @@ const present = new Set(files);
 
 // Only paths that are unambiguously this repository's own: the four source trees, plus
 // the two uppercase-named documents at the root of docs/. Target-project conventions
-// like docs/superpowers/plans/ are lowercase and therefore never match.
+// like docs/engineering/plans/ are lowercase and therefore never match.
 const CANDIDATE = /(?<![\w/.@-])((?:test|install|assets|lib)\/[A-Za-z0-9_./-]+\.(?:mjs|js|sh|md|yml|json)|docs\/[A-Z][A-Z_]*\.md)/g;
 
 const offences = [];

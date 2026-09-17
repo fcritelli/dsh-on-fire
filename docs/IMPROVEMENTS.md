@@ -145,7 +145,7 @@ complete, quantified, consistent with itself and covers the edge cases. It is `s
 test of the Portuguese", with the ownership rule that would make a difference for us: **whoever
 generates the checklist does not mark the items** — the agent writes `- [ ]`, the reviewer marks
 `- [x]`. Without that, the acceptance criteria of `implementation-plans` are written and marked by
-the same agent, which thus corrects its own exam. It lives in `docs/superpowers/reviews/`, and it
+the same agent, which thus corrects its own exam. It lives in `docs/engineering/reviews/`, and it
 serves to review an old plan, not only a freshly written one.
 
 A skill only fires if the model judges that its description matches the situation, and that is the

@@ -117,6 +117,27 @@ The prompt rules don't have that precedence mechanism — they add up. If the sa
 are in your `~/.dsh/AGENTS.md`, they enter the prompt twice and cost double. When adopting the
 bundle, take them out of there.
 
+## What it creates in your project
+
+Four kinds of artifact, all under one root, so they are identifiable as a set and never collide
+with the project's own documentation conventions:
+
+```
+docs/engineering/
+├── specs/     # the design document — the "what"
+├── plans/     # the executable plan — the "how"
+├── ledgers/   # the progress record, one per plan
+└── reviews/   # the requirement-quality checklist, owned by the reviewer
+```
+
+The root is descriptive rather than branded on purpose: the artifacts outlive any particular
+version of this bundle, and a folder named after the tool would have to be migrated the day the
+tool is renamed.
+
+The bundle credits where its ideas came from — `docs/EVALUATIONS.md` records that the plan format
+was adapted from `obra/superpowers`, among others — but it does not inherit anyone else's folder
+names. A reference belongs in the prose, not in the structure.
+
 ## The parts that aren't a bundle, and why
 
 Two things stay in `install/` because they can't be packaged:

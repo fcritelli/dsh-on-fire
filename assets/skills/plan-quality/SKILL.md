@@ -33,7 +33,7 @@ the implementation having been done.
 
 ## Where the review lives
 
-`docs/superpowers/reviews/<YYYY-MM-DD>-<feature-name>.md`
+`docs/engineering/reviews/<YYYY-MM-DD>-<feature-name>.md`
 
 One review per plan. If the plan changes after the review, the items the plan invalidated go back
 to `[ ]` — the review is of the plan as it is now, not of yesterday's plan.

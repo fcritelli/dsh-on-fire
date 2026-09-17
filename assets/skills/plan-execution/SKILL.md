@@ -1,6 +1,6 @@
 ---
 name: plan-execution
-description: "Use when executing an already-approved implementation plan (docs/superpowers/plans/) task by task, with subagents, a versioned progress ledger and an independent review after each task."
+description: "Use when executing an already-approved implementation plan (docs/engineering/plans/) task by task, with subagents, a versioned progress ledger and an independent review after each task."
 ---
 
 # Plan execution
@@ -11,7 +11,7 @@ is **versioned**.
 
 ## Prerequisites
 
-1. The plan exists at `docs/superpowers/plans/<date>-<name>.md`.
+1. The plan exists at `docs/engineering/plans/<date>-<name>.md`.
 2. An isolated workspace — a worktree, when the project uses `.worktrees/`. **Never** start
    implementation on `main`/`master` without explicit consent.
 3. Read the plan **once**. If it cites a spec, read the spec too: it is the authority the
@@ -23,10 +23,10 @@ is **versioned**.
 
 ## The ledger — versioned
 
-`docs/superpowers/ledgers/<plan-name>.md`
+`docs/engineering/ledgers/<plan-name>.md`
 
 The subagent reports live in a sibling directory with the same base name,
-`docs/superpowers/ledgers/<plan-name>/reports/task-N.md` — that directory is what this text
+`docs/engineering/ledgers/<plan-name>/reports/task-N.md` — that directory is what this text
 calls `<ledger-workspace>` below. The ledger is a **file**, the reports are a **directory**
 next to it, never one inside the other.
 
@@ -43,7 +43,7 @@ expensive failure mode is re-dispatching a completed task.
 Structure — keep the first line exactly like this, so the ledger identifies itself:
 
 ```markdown
-# Ledger — plan: docs/superpowers/plans/<file>.md
+# Ledger — plan: docs/engineering/plans/<file>.md
 
 ## Pre-flight Conflict Scan
 | Task pair | Produces / Consumes | Status |
