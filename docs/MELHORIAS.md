@@ -18,13 +18,14 @@ sobrevive a revisão.
 | 6 | Skill `planos-de-implementacao` | skill (rank 600) | `skillsDesativadas: [planos-de-implementacao]` |
 | 7 | Skill `qualidade-do-plano` | skill (rank 600) | `skillsDesativadas: [qualidade-do-plano]` |
 | 8 | Skill `execucao-de-planos` | skill (rank 600) | `skillsDesativadas: [execucao-de-planos]` |
-| 9 | Skill `browser-harness` | skill (rank 600) | `skillsDesativadas: [browser-harness]` |
-| 10 | Skill `i-have-adhd` | skill (rank 600) | `skillsDesativadas: [i-have-adhd]` |
-| 11 | Servidor MCP `graphify` | row `mcp-graphify` | remover a row, ou `disabled: true` |
-| 12 | Servidor MCP `lgpd` | row `mcp-lgpd` | remover a row, ou `disabled: true` |
-| 13 | Wrapper do graphify + chave | `install/` (local à máquina) | não rodar o script |
+| 9 | Skill `qualidade-dos-testes` | skill (rank 600) | `skillsDesativadas: [qualidade-dos-testes]` |
+| 10 | Skill `browser-harness` | skill (rank 600) | `skillsDesativadas: [browser-harness]` |
+| 11 | Skill `i-have-adhd` | skill (rank 600) | `skillsDesativadas: [i-have-adhd]` |
+| 12 | Servidor MCP `graphify` | row `mcp-graphify` | remover a row, ou `disabled: true` |
+| 13 | Servidor MCP `lgpd` | row `mcp-lgpd` | remover a row, ou `disabled: true` |
+| 14 | Wrapper do graphify + chave | `install/` (local à máquina) | não rodar o script |
 
-Todas as opções 1–10 se escrevem na config da row `on-fire`, na sua camada de patch:
+Todas as opções 1–11 se escrevem na config da row `on-fire`, na sua camada de patch:
 
 ```yaml
 # ~/.dsh/cordis.patch.yml
@@ -122,7 +123,7 @@ que saiu foi justificativa e exemplo; o que ficou é verificável antes de envia
 
 **Toggle:** `adhd: false`. Nesta sessão, `stop adhd mode`.
 
-## 5–10. As seis skills
+## 5–11. As sete skills
 
 Todas com rank 600, todas sobreponíveis por uma cópia local de mesmo nome.
 
@@ -150,6 +151,15 @@ self-review antes de entregar, e o `execucao-de-planos` nos pré-requisitos: o p
 skill que já está carregada naquele exato momento, o que é mais confiável que esperar que a entrada
 do catálogo seja notada no meio de uma dúzia.
 
+**`qualidade-dos-testes`** — audita se uma suíte verde está medindo capacidade ou só formato. Duas
+falhas, e as duas passam por revisão desatenta: a asserção que confere **um valor que o próprio teste
+inventou** — no `securityAcceptance.test.ts` do `kikin-admin`, o teste cujo título prometia "900s"
+verificava um `expiresInSeconds` que o helper do teste escrevia à mão, campo que não existia em
+nenhum arquivo de produção — e o fixture que **encosta na implementação**, como o golden file
+regerado a partir do código ou o dataset de avaliação com interseção com o de treino. Traz um scan
+mecânico que acha os casos grosseiros da primeira falha, com o limite declarado: ele gera candidatos,
+não vereditos, e a segunda falha não tem scan — exige leitura.
+
 **`browser-harness`** — toda interação web: automação, scraping, teste, trabalho em site ou app.
 São 228 linhas mais nove arquivos em `references/`, porque a versão longa é carregada sob demanda e
 só a descrição entra sempre no contexto. Dez dos dezoito documentos de interação do projeto original
@@ -161,7 +171,7 @@ são esboços vazios; a skill traz só o que funciona, verificado.
 É por isso que ela **não** aparece quando se pergunta ao agente quais skills ele tem — comportamento
 correto, verificado no host real.
 
-## 11. Servidor MCP `graphify`
+## 12. Servidor MCP `graphify`
 
 Registra o servidor MCP do grafo de conhecimento local. Os tools aparecem como `mcp__graphify__*` e
 funcionam em modo multi-projeto: cada chamada recebe `project_path` com o caminho absoluto da raiz do
@@ -183,7 +193,7 @@ absoluto desta máquina na sua camada, porque o PATH do host do DSH costuma ser 
 
 **Toggle:** remova a row `mcp-graphify` da sua camada, ou marque `disabled: true`.
 
-## 12. Servidor MCP `lgpd`
+## 13. Servidor MCP `lgpd`
 
 Apoio à conformidade com a LGPD (Lei 13.709/2018). Tools em `mcp__lgpd__*`:
 `validar_base_legal`, `verificar_consentimento`, `gerar_modelo_consentimento`,
@@ -195,7 +205,7 @@ resources `lgpd://fundamentos|artigos|base-legal|glossario|anpd`.
 
 **Toggle:** remova a row `mcp-lgpd` da sua camada, ou marque `disabled: true`.
 
-## 13. Wrapper do graphify e a chave
+## 14. Wrapper do graphify e a chave
 
 `~/.local/bin/graphify` é um wrapper que lê a chave do Gemini em
 `~/.config/graphify/gemini.key` (modo 600) e a exporta antes de chamar o binário real. Existe porque

@@ -20,7 +20,7 @@ com o motivo — estão em [`docs/AVALIACOES.md`](./docs/AVALIACOES.md).
 | `graphify` | consultar o grafo antes, sincronizar depois, e nunca ler o `graph.json` cru |
 | `adhd` | estilo de saída para leitor com ADHD |
 
-**Seis skills:**
+**Sete skills:**
 
 | Skill | O que faz |
 |---|---|
@@ -28,6 +28,7 @@ com o motivo — estão em [`docs/AVALIACOES.md`](./docs/AVALIACOES.md).
 | `planos-de-implementacao` | planeja mudança de múltiplos passos antes de tocar no código |
 | `qualidade-do-plano` | revisa se o TEXTO do plano basta, antes de executá-lo |
 | `execucao-de-planos` | executa um plano aprovado tarefa por tarefa, com ledger e review |
+| `qualidade-dos-testes` | audita se a suíte mede capacidade ou só formato |
 | `browser-harness` | toda interação web: automação, scraping, teste |
 | `i-have-adhd` | a versão invocável da regra `adhd`, carregada por `/i-have-adhd` |
 
