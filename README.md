@@ -1,166 +1,166 @@
 # dsh-on-fire
 
-Melhorias opinativas e configuráveis para o [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness), empacotadas como um **bundle de perfil** — a forma nativa de plugin do DSH.
+Opinionated, configurable improvements for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness), packaged as a **profile bundle** — DSH's native plugin form.
 
-Um comando instala regras de prompt, cinco skills de fluxo de trabalho e dois servidores MCP. Cada
-parte liga e desliga por configuração.
+One command installs prompt rules, seven workflow skills and two MCP servers. Each
+part turns on and off by configuration.
 
-O catálogo completo, com a evidência de cada item e como desligar, está em
-[`docs/MELHORIAS.md`](./docs/MELHORIAS.md). As ferramentas que foram avaliadas e **rejeitadas** —
-com o motivo — estão em [`docs/AVALIACOES.md`](./docs/AVALIACOES.md).
+The full catalog, with the evidence for each item and how to turn it off, is in
+[`docs/IMPROVEMENTS.md`](./docs/IMPROVEMENTS.md). The tools that were evaluated and **rejected** —
+with the reason — are in [`docs/EVALUATIONS.md`](./docs/EVALUATIONS.md).
 
-## O que vem dentro
+## What comes inside
 
-**Quatro regras de comportamento**, como seções de prompt que valem em toda sessão e todo workspace:
+**Four behavior rules**, as prompt sections that apply in every session and every workspace:
 
-| Regra | O que faz |
+| Rule | What it does |
 |---|---|
-| `idioma` | toda saída ao usuário em português do Brasil, sem precisar de pedido |
-| `espera` | esperar subagente/job por notificação ou por uma chamada com `wait`, nunca em laço |
-| `graphify` | consultar o grafo antes, sincronizar depois, e nunca ler o `graph.json` cru |
-| `adhd` | estilo de saída para leitor com ADHD |
+| `language` | every output to the user in Brazilian Portuguese, without needing to be asked |
+| `waiting` | wait for a subagent/job by notification or by one call with `wait`, never in a loop |
+| `graphify` | query the graph first, sync afterwards, and never read the raw `graph.json` |
+| `adhd` | output style for a reader with ADHD |
 
-**Sete skills:**
+**Seven skills:**
 
-| Skill | O que faz |
+| Skill | What it does |
 |---|---|
-| `constituicao-do-projeto` | cria, revisa ou aplica `docs/CONSTITUICAO.md` |
-| `planos-de-implementacao` | planeja mudança de múltiplos passos antes de tocar no código |
-| `qualidade-do-plano` | revisa se o TEXTO do plano basta, antes de executá-lo |
-| `execucao-de-planos` | executa um plano aprovado tarefa por tarefa, com ledger e review |
-| `qualidade-dos-testes` | audita se a suíte mede capacidade ou só formato |
-| `browser-harness` | toda interação web: automação, scraping, teste |
-| `i-have-adhd` | a versão invocável da regra `adhd`, carregada por `/i-have-adhd` |
+| `project-constitution` | creates, reviews or applies `docs/CONSTITUTION.md` (or `docs/CONSTITUICAO.md` where a project already uses that name) |
+| `implementation-plans` | plans a multi-step change before touching the code |
+| `plan-quality` | reviews whether the plan's TEXT is enough, before executing it |
+| `plan-execution` | executes an approved plan task by task, with ledger and review |
+| `test-quality` | audits whether the suite measures capability or just format |
+| `browser-harness` | every web interaction: automation, scraping, testing |
+| `i-have-adhd` | the invocable version of the `adhd` rule, loaded by `/i-have-adhd` |
 
-**Dois servidores MCP:** `graphify` (grafo de conhecimento do código) e `lgpd` (apoio à conformidade).
+**Two MCP servers:** `graphify` (code knowledge graph) and `lgpd` (compliance support).
 
-## Instalação
+## Installation
 
-Precisa do `pnpm` no PATH — `dsh plugin` repassa os argumentos para ele no diretório do perfil.
+You need `pnpm` on the PATH — `dsh plugin` forwards the arguments to it in the profile directory.
 
 ```bash
-# 1. instalar o bundle no perfil — direto do GitHub
+# 1. install the bundle into the profile — straight from GitHub
 dsh plugin --profile web add git+https://github.com/fcritelli/dsh-on-fire.git
 
-# 2 e 3. (opcionais) os scripts de instalação vivem no REPOSITÓRIO, não no seu diretório,
-# porque o passo 1 só copia o pacote para dentro do perfil.
+# 2 and 3. (optional) the install scripts live in the REPOSITORY, not in your directory,
+# because step 1 only copies the package into the profile.
 git clone https://github.com/fcritelli/dsh-on-fire && cd dsh-on-fire
-./install/ajustar-caminhos.sh    # adapta os caminhos dos MCP a esta máquina
-./install/instalar-graphify.sh   # instala o graphify e o wrapper da chave
+./install/adjust-paths.sh        # adapts the MCP paths to this machine
+./install/install-graphify.sh    # installs graphify and the key wrapper
 
-# 4. reiniciar o DSH
+# 4. restart DSH
 ```
 
-O passo 1 é idempotente e **reconcilia sozinho** a lista `dsh.profile.bundles` do perfil: o `dsh`
-detecta que o pacote declara `dsh.bundle.patch` e o acrescenta à pilha de camadas. Não é preciso
-editar `package.json` à mão.
+Step 1 is idempotent and **reconciles on its own** the profile's `dsh.profile.bundles` list: `dsh`
+detects that the package declares `dsh.bundle.patch` and adds it to the layer stack. There is no need
+to edit `package.json` by hand.
 
-Os passos 2 e 3 são opcionais e independentes: sem eles, o bundle funciona, mas os MCP caem nos
-`command` portáveis do bundle (`graphify-mcp`, `npx`) e o graphify não terá a chave do Gemini.
+Steps 2 and 3 are optional and independent: without them, the bundle works, but the MCP fall back to
+the bundle's portable `command`s (`graphify-mcp`, `npx`) and graphify won't have the Gemini key.
 
-O `pnpm` avisa `missing peer @deepseek-ai/cordis` e `missing peer @deepseek-ai/dsh-skill`. O aviso é
-esperado e inofensivo: o `dsh-base` já traz esses dois pacotes na árvore do perfil, e é de lá que o
-`dsh-on-fire` os resolve em tempo de execução. Verificado instalando do GitHub num perfil limpo e
-bootando: as quatro regras e as quatro skills invocáveis carregam.
+`pnpm` warns `missing peer @deepseek-ai/cordis` and `missing peer @deepseek-ai/dsh-skill`. The warning is
+expected and harmless: `dsh-base` already brings those two packages into the profile tree, and that is where
+`dsh-on-fire` resolves them from at runtime. Verified by installing from GitHub into a clean profile and
+booting: the four rules and the seven skills load.
 
-### Verificar
+### Verify
 
 ```bash
-# as rows do bundle entraram na configuração composta?
+# did the bundle's rows get into the composed configuration?
 dsh --profile web --dump-config | grep -A3 'dsh-on-fire'
 
-# o plugin registra o que deveria? (roda sem DSH, com um contexto falso — precisa do clone)
-node test/verificar.mjs
+# does the plugin register what it should? (runs without DSH, with a fake context — needs the clone)
+node test/verify.mjs
 ```
 
-Depois de reiniciar, pergunte em inglês e veja se a resposta vem em português — é o teste mais
-rápido de que a seção `idioma` está ativa.
+After restarting, ask in English and see whether the answer comes back in Portuguese — it is the fastest
+test that the `language` section is active.
 
-## Configuração
+## Configuration
 
-Todas as opções se escrevem na sua camada de patch, mirando a row `on-fire` por id:
+All options are written in your patch layer, targeting the `on-fire` row by id:
 
 ```yaml
 # ~/.dsh/cordis.patch.yml
 - id: on-fire
   config:
-    idioma: true
-    espera: true
+    language: true
+    waiting: true
     graphify: true
-    adhd: false              # desligou o estilo ADHD
+    adhd: false              # turned off the ADHD style
     skills: true
-    skillsDesativadas: [browser-harness]
+    disabledSkills: [browser-harness]
 ```
 
-**Um patch por id substitui a `config` inteira da row — não faz merge.** Para trocar uma opção,
-repita as outras que quiser manter. É o mesmo cuidado que a documentação do DSH pede, e a razão de
-o bloco acima ser completo.
+**One patch per id replaces the row's whole `config` — it does not merge.** To change one option,
+repeat the others you want to keep. It is the same care DSH's documentation asks for, and the reason
+the block above is complete.
 
-## Como o bundle convive com o que você já tem
+## How the bundle coexists with what you already have
 
-As skills entram com `BUNDLED_SKILL_RANK` (600), a precedência **mais baixa do DSH**:
+Skills come in with `BUNDLED_SKILL_RANK` (600), DSH's **lowest precedence**:
 
 ```
-100  <projeto>/.dsh/skills
-200  <projeto>/.agents/skills
+100  <project>/.dsh/skills
+200  <project>/.agents/skills
 300  (custom)
 400  <dshHome>/skills
 500  ~/.agents/skills
-600  bundled (este bundle)
+600  bundled (this bundle)
 ```
 
-Isso é uma propriedade, não um detalhe: **uma cópia local de mesmo nome sempre ganha do bundle**.
-Instalar é não-destrutivo. Se você já tem `~/.agents/skills/constituicao-do-projeto/`, a sua versão
-continua sendo a usada; para passar a usar a do bundle, remova a cópia local.
+That is a property, not a detail: **a local copy with the same name always wins over the bundle**.
+Installing is non-destructive. If you already have `~/.agents/skills/project-constitution/`, your
+version keeps being the one used; to start using the bundle's, remove the local copy.
 
-As regras de prompt não têm esse mecanismo de precedência — elas se somam. Se as mesmas regras
-estiverem no seu `~/.dsh/AGENTS.md`, elas entram duas vezes no prompt e custam o dobro. Ao adotar o
-bundle, tire-as de lá.
+The prompt rules don't have that precedence mechanism — they add up. If the same rules
+are in your `~/.dsh/AGENTS.md`, they enter the prompt twice and cost double. When adopting the
+bundle, take them out of there.
 
-## As partes que não são bundle, e por quê
+## The parts that aren't a bundle, and why
 
-Duas coisas ficam em `install/` porque não podem ser empacotadas:
+Two things stay in `install/` because they can't be packaged:
 
-**A chave do Gemini** (`install/instalar-graphify.sh`) — pacote não carrega segredo. A chave fica em
-`~/.config/graphify/gemini.key` (modo 600) e o wrapper a lê em tempo de execução, o que também
-mantém a chave fora do repositório.
+**The Gemini key** (`install/install-graphify.sh`) — a package doesn't carry a secret. The key lives in
+`~/.config/graphify/gemini.key` (mode 600) and the wrapper reads it at runtime, which also
+keeps the key out of the repository.
 
-**Os caminhos absolutos dos MCP** (`install/ajustar-caminhos.sh`) — o PATH do host do DSH costuma ser
-mínimo e não contém `~/.local/bin` nem os shims do mise. O bundle traz comandos portáveis; este
-script detecta os caminhos reais desta máquina e grava um override na sua camada. Ele é idempotente e
-prefere caminhos **estáveis** (o symlink do uv e o shim do mise) a caminhos versionados, que quebram
-no próximo upgrade do node.
+**The MCP absolute paths** (`install/adjust-paths.sh`) — the DSH host's PATH is usually
+minimal and contains neither `~/.local/bin` nor the mise shims. The bundle ships portable commands; this
+script detects this machine's real paths and writes an override in your layer. It is idempotent and
+prefers **stable** paths (the uv symlink and the mise shim) over versioned paths, which break
+on the next node upgrade.
 
-## Estrutura
+## Structure
 
 ```
 dsh-on-fire/
-├── package.json          # declara dsh.bundle.patch → cordis.patch.yml
-├── cordis.patch.yml      # insere: row on-fire + mcp-graphify + mcp-lgpd
-├── lib/index.js          # o plugin: seções de prompt + provedor de skills
+├── package.json          # declares dsh.bundle.patch → cordis.patch.yml
+├── cordis.patch.yml      # inserts: row on-fire + mcp-graphify + mcp-lgpd
+├── lib/index.js          # the plugin: prompt sections + skills provider
 ├── assets/
-│   ├── regras/*.md       # o texto das 4 regras
-│   └── skills/*/SKILL.md # as 5 skills, com frontmatter YAML
+│   ├── rules/*.md         # the text of the 4 rules
+│   └── skills/*/SKILL.md # the 7 skills, with YAML frontmatter
 ├── install/
-│   ├── instalar-graphify.sh    # uv tool + chave + wrapper
-│   └── ajustar-caminhos.sh     # override dos caminhos dos MCP
-├── test/verificar.mjs    # verificação do apply() com contexto falso
+│   ├── install-graphify.sh     # uv tool + key + wrapper
+│   └── adjust-paths.sh         # override of the MCP paths
+├── test/verify.mjs       # verification of apply() with a fake context
 └── docs/
-    ├── MELHORIAS.md      # catálogo: o que é, por quê, evidência, toggle
-    └── AVALIACOES.md     # veredictos das ferramentas avaliadas
+    ├── IMPROVEMENTS.md   # catalog: what it is, why, evidence, toggle
+    └── EVALUATIONS.md    # verdicts on the tools evaluated
 ```
 
-## Desinstalar
+## Uninstall
 
 ```bash
 dsh plugin --profile web remove dsh-on-fire
 ```
 
-O `dsh` retira o bundle da pilha de camadas ao reconciliar. Regras e skills somem juntos; nada fica
-para trás. O que **não** some é o bloco gerenciado em `~/.dsh/cordis.patch.yml` — remova-o à mão, ou
-apague tudo entre os marcadores `# >>> dsh-on-fire: caminhos desta máquina` e `# <<< dsh-on-fire: fim`.
+`dsh` removes the bundle from the layer stack when it reconciles. Rules and skills disappear together; nothing
+is left behind. What does **not** disappear is the managed block in `~/.dsh/cordis.patch.yml` — remove it by hand, or
+delete everything between the markers `# >>> dsh-on-fire: machine paths (generated by install/adjust-paths.sh)` and `# <<< dsh-on-fire: end`.
 
-## Licença
+## License
 
-MIT. As skills `i-have-adhd` e `browser-harness` são adaptações de projetos MIT, com a atribuição
-mantida nos próprios arquivos.
+MIT. The `i-have-adhd` and `browser-harness` skills are adaptations of MIT projects, with the attribution
+kept in the files themselves.

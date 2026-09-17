@@ -1,5 +1,5 @@
-# dependências
+# dependencies
 node_modules/
 
-# backups criados pelos scripts de instalação
+# backups created by the install scripts
 *.bak-*

@@ -27,7 +27,7 @@ stays there. **After a compaction it can be pruned** — if the rules seem to ha
 re-invoke `/i-have-adhd`.
 
 **Want it on every session instead?** Do not build a hook for it. Put the ruleset in
-`~/.dsh/AGENTS.md` (all projects) or `<projeto>/AGENTS.local.md` (one machine, git-ignored).
+`~/.dsh/AGENTS.md` (all projects) or `<project>/AGENTS.local.md` (one machine, git-ignored).
 Both are read before any prompt, with no invocation and no hook process.
 
 ## What ADHD changes about reading

@@ -7,20 +7,19 @@ description: "Always use browser-harness for any web interaction: automation, sc
 
 Direct browser control via CDP.
 
-## Orientação — uma chamada antes de começar
+## Orientation — one call before you start
 
 ```bash
 browser-harness doctor --json
 ```
 
-Devolve `chrome_running`, `daemon.alive`, `daemon.browser_ready`, `daemon.name`, `install_mode` e
-`version`. `healthy: true` significa que pode ir direto ao trabalho; caso contrário siga
-*Chrome local* abaixo.
+Returns `chrome_running`, `daemon.alive`, `daemon.browser_ready`, `daemon.name`, `install_mode` and
+`version`. `healthy: true` means you can go straight to work; otherwise follow *Local Chrome* below.
 
-**Um subagente deve rodar isto primeiro.** Ele começa sem o contexto do pai: não sabe se o daemon
-está de pé, qual browser está anexado, nem quais abas existem. Esta é a chamada que responde isso.
+**A subagent must run this first.** It starts without the parent's context: it does not know whether
+the daemon is up, which browser is attached, or which tabs exist. This is the call that answers that.
 
-## Quando NÃO usar
+## When NOT to use
 
 A basic fetch of public information needs no browser. If a plain HTTP request can read it — a public page, an API, docs — use `curl` or your fetch tool, and leave the browser alone. Use browser-harness when the task needs interaction (click, type, navigate), the user's logged-in session, JS rendering, or a bot-protected page. If a direct fetch fails or returns a shell page, then escalate to the browser.
 
@@ -28,33 +27,34 @@ Domain skills are off by default. Set `BH_DOMAIN_SKILLS=1` to enable them; see t
 
 **If `BH_DOMAIN_SKILLS=1` and the task is site-specific, read every file in the matching `$BH_AGENT_WORKSPACE/domain-skills/<site>/` directory before inventing an approach.**
 
-## Subagentes — leia antes de paralelizar
+## Subagents — read before parallelizing
 
-**O Chrome local é UM browser compartilhado.** Abas, foco, cookies e sessão são os mesmos para
-todo mundo que usa o daemon `default`. Vários subagentes no mesmo daemon **não** ganham
-paralelismo: eles disputam aba e foco, e o resultado é trabalho cruzado — clique no lugar errado,
-uma navegação derrubando a outra.
+**Local Chrome is ONE shared browser.** Tabs, focus, cookies, and session are the same for everyone
+using the `default` daemon. Several subagents on the same daemon do **not** gain parallelism: they
+fight over tab and focus, and the result is crossed work — a click in the wrong place, one navigation
+taking down the other.
 
-- **Um subagente de browser por vez no daemon local.** Se mais de um precisa de browser, serialize.
-- **Paralelismo real exige um cloud browser por tarefa** — `start_remote_daemon("nome")`, isolado
-  por construção. Sem isso, não despache em paralelo. Ver *Remote Browsers*.
-- **Subagente que só lê página pública não usa browser** — `curl` resolve. Ver *Quando NÃO usar*.
-- **Login wall continua sendo parada obrigatória**, inclusive para subagente: ele para e devolve a
-  pergunta. Nunca tenta senha, MFA, consentimento ou escolha de conta.
-- **O subagente devolve resultado, não transcript.** Se produziu screenshot ou gravação, devolve o
-  **caminho do arquivo** — não a imagem nem o log de cliques.
+- **One browser subagent at a time on the local daemon.** If more than one needs a browser, serialize.
+- **Real parallelism requires one cloud browser per task** — `start_remote_daemon("name")`, isolated
+  by construction. Without that, do not dispatch in parallel. See *Remote Browsers*.
+- **A subagent that only reads a public page does not use a browser** — `curl` handles it. See *When
+  NOT to use*.
+- **A login wall is still a mandatory stop**, including for a subagent: it stops and hands back the
+  question. It never tries a password, MFA, consent, or account choice.
+- **The subagent returns a result, not a transcript.** If it produced a screenshot or recording, it
+  returns the **file path** — not the image or the click log.
 
-## Onde ficam os arquivos do agente
+## Where the agent's files live
 
-`$BH_AGENT_WORKSPACE` aponta para o diretório de extensões do agente. **Nesta instalação a
-variável não está definida** — o caminho real é:
+`$BH_AGENT_WORKSPACE` points to the agent's extensions directory. **In this installation the variable
+is not set** — the real path is:
 
 ```text
 ~/.config/browser-harness/agent-workspace/
 ```
 
-É onde vivem `agent_helpers.py` (suas extensões, ver *Design Constraints*) e `domain-skills/`.
-Quando a variável não existir, use esse caminho em vez de `$BH_AGENT_WORKSPACE`.
+That is where `agent_helpers.py` (your extensions, see *Design Constraints*) and `domain-skills/`
+live. When the variable does not exist, use that path instead of `$BH_AGENT_WORKSPACE`.
 
 ## Usage
 
@@ -147,27 +147,27 @@ Cloud profile cookie sync reference: `references/profile-sync.md`.
 - Login walls: stop and ask. Exception: use available SSO automatically when Chrome is already signed in; still stop for passwords, MFA, consent, or ambiguous account choice.
 - Raw CDP is available with `cdp("Domain.method", ...)`.
 
-## Referências locais
+## Local references
 
-Leia o arquivo em `references/`, ao lado desta skill — não busque na web:
+Read the file in `references/`, next to this skill — do not search the web:
 
-| Arquivo | Cobre |
+| File | Covers |
 |---|---|
-| `install.md` | instalação e problemas de conexão |
-| `connection.md` | popup do omnibox, aba invisível, `switch_tab` |
-| `tabs.md` | abas, foco, aba real versus interna |
-| `dialogs.md` | alerts, confirms e prompts nativos |
-| `scrolling.md` | scroll de página, container aninhado, lista virtualizada |
-| `screenshots.md` | captura e recorte |
-| `viewport.md` | tamanho de viewport e emulação de toque |
-| `profile-sync.md` | sincronizar cookies entre perfil local e cloud |
-| `make-video.md` | pós-produção de gravação |
+| `install.md` | installation and connection problems |
+| `connection.md` | omnibox popup, invisible tab, `switch_tab` |
+| `tabs.md` | tabs, focus, real vs internal tab |
+| `dialogs.md` | native alerts, confirms and prompts |
+| `scrolling.md` | page scroll, nested container, virtualized list |
+| `screenshots.md` | capture and cropping |
+| `viewport.md` | viewport size and touch emulation |
+| `profile-sync.md` | sync cookies between local profile and cloud |
+| `make-video.md` | recording post-production |
 
-Os outros nomes que aparecem no repositório — `iframes.md`, `cross-origin-iframes.md`,
+The other names that appear in the repository — `iframes.md`, `cross-origin-iframes.md`,
 `cookies.md`, `downloads.md`, `drag-and-drop.md`, `dropdowns.md`, `network-requests.md`,
-`print-as-pdf.md`, `shadow-dom.md`, `uploads.md` — são **stubs**: só título e uma linha do que
-deveriam cobrir. Não gaste chamada buscando. Escreva o helper de que precisar em
-`agent_helpers.py` (ver *Onde ficam os arquivos do agente*).
+`print-as-pdf.md`, `shadow-dom.md`, `uploads.md` — are **stubs**: just a title and one line about what
+they should cover. Do not waste a call looking for them. Write the helper you need in
+`agent_helpers.py` (see *Where the agent's files live*).
 
 ## Recordings and Videos
 
@@ -210,7 +210,7 @@ recording path while the main agent returns the task result.
   `BH_REQUIRE_EXISTING_DAEMON=1`. Each CLI call then health-checks and reuses
   that daemon or fails closed; it never auto-starts or discovers another Chrome.
 - Core helpers stay short. Put task-specific helper additions in
-  `<workspace-do-agente>/agent_helpers.py`.
+  `<agent-workspace>/agent_helpers.py`.
 
 ## Gotchas
 
@@ -225,4 +225,4 @@ recording path while the main agent returns the task result.
 
 Only applies when `BH_DOMAIN_SKILLS=1`. Otherwise ignore domain skills.
 
-When enabled, search `<workspace-do-agente>/domain-skills/<host>/` before inventing an approach. `goto_url(...)` returns up to 10 skill filenames for the navigated host.
+When enabled, search `<agent-workspace>/domain-skills/<host>/` before inventing an approach. `goto_url(...)` returns up to 10 skill filenames for the navigated host.

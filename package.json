@@ -1,7 +1,7 @@
 {
   "name": "dsh-on-fire",
   "version": "0.1.0",
-  "description": "Melhorias opinativas e configuráveis para o DeepSeek Harness: regras de prompt em pt-BR, skills de fluxo de trabalho e os servidores MCP de grafo de código e LGPD — como um bundle de perfil do DSH.",
+  "description": "Opinionated, configurable improvements for DeepSeek Harness: prompt rules in pt-BR, workflow skills and the code-graph and LGPD MCP servers — as a DSH profile bundle.",
   "keywords": [
     "dsh",
     "deepseek-harness",

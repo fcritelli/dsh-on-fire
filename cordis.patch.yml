@@ -1,38 +1,38 @@
-# Patch do bundle `dsh-on-fire`, aplicado como UMA camada sobre o perfil.
+# Patch of the `dsh-on-fire` bundle, applied as ONE layer over the profile.
 #
-# Uma camada de bundle é aplicada ANTES do patch do usuário
-# (`~/.dsh/profiles/<perfil>/cordis.patch.yml`) e antes do patch do DSH home
-# (`~/.dsh/cordis.patch.yml`). Então tudo aqui é **padrão**: para trocar qualquer
-# valor, o usuário mira a row por id numa camada posterior e a última escrita vence.
+# A bundle layer is applied BEFORE the user's patch
+# (`~/.dsh/profiles/<profile>/cordis.patch.yml`) and before the DSH home patch
+# (`~/.dsh/cordis.patch.yml`). So everything here is a **default**: to change any
+# value, the user targets the row by id in a later layer and the last write wins.
 #
-# Cuidado ao mirar por id: um patch substitui a `config` INTEIRA da row, não faz merge.
-# Para trocar só o `command` do graphify, é preciso reescrever o bloco completo.
+# Careful when targeting by id: a patch replaces the row's WHOLE `config`; it does not merge.
+# To change only graphify's `command`, you have to rewrite the entire block.
 
 - insert:
-    # ── as melhorias do bundle ────────────────────────────────────────────────
-    # Regras de prompt + skills. Cada toggle é independente; ver docs/MELHORIAS.md.
+    # ── the bundle's improvements ────────────────────────────────────────────────
+    # Prompt rules + skills. Each toggle is independent; see docs/IMPROVEMENTS.md.
     - id: on-fire
       name: 'dsh-on-fire'
       config:
-        idioma: true
-        espera: true
+        language: true
+        waiting: true
         graphify: true
         adhd: true
         skills: true
-        skillsDesativadas: []
+        disabledSkills: []
 
-    # ── servidores MCP ────────────────────────────────────────────────────────
-    # Os `command` abaixo são portáveis de propósito (nome no PATH, sem caminho
-    # absoluto e sem usuário). O PATH do host do DSH costuma ser mínimo, então em
-    # algumas máquinas o nome não resolve: nesse caso o `install/ajustar-caminhos.sh`
-    # grava um override com o caminho absoluto na sua camada de usuário.
+    # ── MCP servers ────────────────────────────────────────────────────────
+    # The `command`s below are portable on purpose (name on the PATH, no absolute
+    # path and no user). The DSH host's PATH is usually minimal, so on
+    # some machines the name does not resolve: in that case `install/adjust-paths.sh`
+    # writes an override with the absolute path in your user layer.
     #
-    # `failOnStartupError: false` mantém o DSH de pé quando o servidor não sobe —
-    # o custo é falhar em silêncio, então confira a lista de tools depois de instalar.
+    # `failOnStartupError: false` keeps DSH standing when the server does not come up —
+    # the cost is failing silently, so check the tool list after installing.
 
-    # Grafo de conhecimento do código. Os tools aparecem como `mcp__graphify__*` e
-    # funcionam em modo multi-projeto: cada chamada recebe `project_path` com o caminho
-    # absoluto da raiz do workspace. Sem `project_path` a chamada falha de propósito.
+    # Code knowledge graph. The tools appear as `mcp__graphify__*` and
+    # work in multi-project mode: every call receives `project_path` with the absolute
+    # path of the workspace root. Without `project_path` the call fails on purpose.
     - id: mcp-graphify
       name: '@deepseek-ai/dsh-mcp-client'
       config:
@@ -43,8 +43,8 @@
         toolCallTimeoutMs: 120000
         failOnStartupError: false
 
-    # Apoio à conformidade com a LGPD (Lei 13.709/2018). Tools em `mcp__lgpd__*`.
-    # Auxiliar: NÃO substitui assessoria jurídica.
+    # Support for LGPD compliance (Law 13.709/2018). Tools at `mcp__lgpd__*`.
+    # Auxiliary: it does NOT replace legal advice.
     - id: mcp-lgpd
       name: '@deepseek-ai/dsh-mcp-client'
       config:
