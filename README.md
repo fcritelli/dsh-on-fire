@@ -20,12 +20,13 @@ com o motivo — estão em [`docs/AVALIACOES.md`](./docs/AVALIACOES.md).
 | `graphify` | consultar o grafo antes, sincronizar depois, e nunca ler o `graph.json` cru |
 | `adhd` | estilo de saída para leitor com ADHD |
 
-**Cinco skills:**
+**Seis skills:**
 
 | Skill | O que faz |
 |---|---|
 | `constituicao-do-projeto` | cria, revisa ou aplica `docs/CONSTITUICAO.md` |
 | `planos-de-implementacao` | planeja mudança de múltiplos passos antes de tocar no código |
+| `qualidade-do-plano` | revisa se o TEXTO do plano basta, antes de executá-lo |
 | `execucao-de-planos` | executa um plano aprovado tarefa por tarefa, com ledger e review |
 | `browser-harness` | toda interação web: automação, scraping, teste |
 | `i-have-adhd` | a versão invocável da regra `adhd`, carregada por `/i-have-adhd` |

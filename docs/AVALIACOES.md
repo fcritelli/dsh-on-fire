@@ -15,7 +15,7 @@ sim/não, e quase sempre a ideia sobrevive mesmo quando o pacote não.
 | `ayghri/i-have-adhd` | **adotado** (adaptado) | resolve um problema real, MIT, 120 linhas |
 | `browser-use/browser-harness` | **adotado** (adaptado) | CDP já instalado e funcionando |
 | `obra/superpowers` | rejeitado como pacote | ~4.900 tokens sempre no contexto com o hook |
-| `github/spec-kit` | rejeitado como fluxo | A/B deu 49/49 nos dois braços |
+| `github/spec-kit` | rejeitado como fluxo, 3 ideias adotadas | A/B deu 49/49 nos dois braços |
 | `ruvnet/ruflo` | rejeitado | 353 tools MCP ≈ 65.663 tokens por requisição |
 | `alexgreensh/token-optimizer` | rejeitado | licença PolyForm Noncommercial |
 | `addyosmani/agent-skills` | rejeitado como catálogo | ~2.421 tokens de catálogo para pouco uso |
@@ -71,21 +71,51 @@ o laço de desenvolvimento orientado a especificação, adaptado junto.
 
 ### `github/spec-kit` — rejeitado como fluxo, aproveitado como ideia
 
-Spec-Driven Development oficial.
+Spec-Driven Development oficial. Avaliado duas vezes: na primeira o projeto era um conjunto de
+templates; na segunda, depois de crescer para 581 arquivos com sistema de extensões e presets. O
+veredicto de fluxo não mudou nas duas, mas o que dá para aproveitar mudou.
 
-**Por que caiu.** A integração com o DSH **existe** e é oficial: o `spec-kit` sabe scaffolder
-`.dsh/skills/`. Isso tornava o teste justo, então rodei um A/B controlado — projeto pequeno, dois
-diretórios, com e sem — e o resultado foi **49/49 casos de aceitação nos dois braços**. O fluxo não
-mudou o desfecho no tamanho de projeto em que ele foi testado.
+**Por que caiu.** A integração com o DSH **existe** e é oficial, então o teste era justo: rodei um
+A/B controlado — projeto pequeno, dois diretórios, com e sem — e o resultado foi **49/49 casos de
+aceitação nos dois braços**. O fluxo não mudou o desfecho no tamanho de projeto em que ele foi
+testado.
 
 **Ressalva metodológica.** 49/49 nos dois braços é um resultado **negativo**, não uma prova de
 equivalência geral. O experimento foi de um projeto pequeno; o `spec-kit` foi desenhado para
-especificação grande e multi-pessoa, e nada aqui diz que ele falha nesse caso. O que o teste
-autoriza a afirmar é só isto: no tamanho testado, o custo adicional não se pagou.
+especificação grande e multi-pessoa, e nada aqui diz que ele falha nesse caso. O que o teste autoriza
+a afirmar é só isto: no tamanho testado, o custo adicional não se pagou.
 
-**O que sobrou.** Duas ideias, não o fluxo: a **constituição** do projeto (virou
-`constituicao-do-projeto` mais um `docs/CONSTITUICAO.md` por repositório) e **critérios de aceitação**
-explícitos antes da implementação.
+**O que sobrou.** Três ideias, não o fluxo:
+
+1. A **constituição** do projeto — virou `constituicao-do-projeto` mais um `docs/CONSTITUICAO.md` por
+   repositório.
+2. **Critérios de aceitação** explícitos antes da implementação.
+3. A **checklist de qualidade do requisito**, na segunda passada. É a mais interessante das três e a
+   única que ainda não existia aqui, então virou a skill `qualidade-do-plano`. O conceito deles é que
+   a checklist é um *teste unitário para o inglês*: ela valida a qualidade da **escrita do requisito**
+   (completeza, clareza, consistência, cobertura, casos de borda), não se a implementação funciona. E
+   vem com uma regra de posse que é o que faz diferença real para nós: **o comando que gera a
+   checklist não pode marcar os itens** — quem marca é o revisor. Isso fecha um buraco nosso: os
+   critérios de aceitação do `planos-de-implementacao` são escritos e marcados pelo mesmo agente, que
+   assim corrige a própria prova.
+
+**O que a segunda passada confirmou sobre a nossa arquitetura.** A integração com o DSH diz, no
+próprio código, que o DSH descobre skills em `.dsh/skills`, que skills são invocáveis pelo gatilho
+`/nome`, e que **"Project guidance in AGENTS.md at the repo root is loaded automatically by DSH, so
+no context-file handling is needed here"**. Ou seja, o que construímos é o que eles esperam encontrar,
+e eles não precisam fazer mais nada no DSH — o tratamento de arquivo de contexto deles existe para
+`CLAUDE.md` e Copilot. E a extensão `agent-context` mantém um bloco gerenciado entre marcadores
+explícitos para regravar de forma idempotente sem apagar o conteúdo do usuário — exatamente o que eu
+hand-rolei no `install/ajustar-caminhos.sh`, pelos mesmos motivos. Convergimos por conta própria; não
+havia o que importar.
+
+**O que foi examinado e ficou de fora, com motivo.** O `analyze` faz consistência cruzada entre spec,
+plano e tarefas — nós já fazemos plano-contra-constituição, que é o eixo que importa aqui. O
+`converge` compara o código com o plano e acrescenta o que faltou como tarefa nova, mas nosso ledger
+de progresso versionado no `execucao-de-planos` já cobre isso. O `clarify` faz perguntas direcionadas
+para fechar lacunas antes de especificar, e isso já está na regra de ambiguidade real do harness. O
+sistema de extensões e hooks (`.specify/extensions.yml`) é um ponto de plug-in que não temos onde
+usar.
 
 ### `ruvnet/ruflo` — rejeitado
 

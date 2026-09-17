@@ -106,12 +106,12 @@ caso("desligar tudo não registra seção nenhuma", () => {
 });
 
 // ── skills ──────────────────────────────────────────────────────────────────
-caso("registra o provedor e lista as 5 skills com rank 600 (bundled)", async () => {
+caso("registra o provedor e lista as 6 skills com rank 600 (bundled)", async () => {
 	const { ctx, provedores } = contextoFalso();
 	apply(ctx, configPadrao());
 	assert.equal(provedores.length, 1);
 	const candidatos = await provedores[0].list();
-	assert.equal(candidatos.length, 5, `esperava 5 skills, veio ${candidatos.length}`);
+	assert.equal(candidatos.length, 6, `esperava 6 skills, veio ${candidatos.length}`);
 	for (const candidato of candidatos) {
 		assert.equal(candidato.rank, 600, `${candidato.name} deveria ter rank 600`);
 		assert.equal(candidato.provider, "on-fire");
@@ -127,7 +127,8 @@ caso("registra o provedor e lista as 5 skills com rank 600 (bundled)", async () 
 			"constituicao-do-projeto",
 			"execucao-de-planos",
 			"i-have-adhd",
-			"planos-de-implementacao"
+			"planos-de-implementacao",
+			"qualidade-do-plano"
 		]
 	);
 });
@@ -162,7 +163,7 @@ caso("skillsDesativadas remove a skill do catálogo", async () => {
 	const { ctx, provedores } = contextoFalso();
 	apply(ctx, configPadrao({ skillsDesativadas: ["browser-harness"] }));
 	const candidatos = await provedores[0].list();
-	assert.equal(candidatos.length, 4);
+	assert.equal(candidatos.length, 5);
 	assert.ok(!candidatos.some((c) => c.name === "browser-harness"));
 });
 
