@@ -28,11 +28,12 @@ fi
 TOOLS_DIR="$(uv tool dir 2>/dev/null || echo "$HOME/.local/share/uv/tools")"
 REAL_BIN="$TOOLS_DIR/graphifyy/bin/graphify"
 
-# ── 1. the package, with BOTH extras ───────────────────────────────────────────
-# The `mcp` extra is the one that exposes the MCP server; `gemini` is the CLI's LLM provider.
-# Installing with one extra ERASES the other — that is why both are here, always together.
-echo "==> installing graphifyy[mcp,gemini]==$GRAPHIFY_VERSION"
-uv tool install "graphifyy[mcp,gemini]==$GRAPHIFY_VERSION" --force
+# ── 1. the package, with every extra it needs ─────────────────────────────────
+# `mcp` exposes the MCP server, `gemini` is the CLI's LLM provider, and `sql` brings the SQL
+# grammar — without it, `.sql` files contribute nothing to the graph.
+# Installing with one extra ERASES the others — that is why they are listed together, always.
+echo "==> installing graphifyy[mcp,gemini,sql]==$GRAPHIFY_VERSION"
+uv tool install "graphifyy[mcp,gemini,sql]==$GRAPHIFY_VERSION" --force
 
 if [ ! -x "$REAL_BIN" ]; then
 	echo "error: expected the binary at $REAL_BIN and it is not there." >&2

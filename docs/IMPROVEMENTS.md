@@ -188,11 +188,11 @@ path of this machine into your layer, because the PATH of the DSH host is usuall
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `No module named 'mcp'` / missing tools | the `mcp` extra is missing | `install/install-graphify.sh` (installs `[mcp,gemini]`) |
+| `No module named 'mcp'` / missing tools | the `mcp` extra is missing | `install/install-graphify.sh` (installs `[mcp,gemini,sql]`) |
 | `No LLM provider configured` | the `gemini` extra is missing, or the wrapper was overwritten | `install/install-graphify.sh` |
 | Labels became "Community N" | `label` ran without a key | check `~/.config/graphify/gemini.key` |
 
-**Installing with one extra ERASES the others** — the correct set is `[mcp,gemini]`. Any
+**Installing with one extra ERASES the others** — the correct set is `[mcp,gemini,sql]`. Any
 `uv tool install|upgrade` also overwrites the wrapper in `~/.local/bin/graphify`.
 
 **Toggle:** remove the `mcp-graphify` row from your layer, or set `disabled: true`.

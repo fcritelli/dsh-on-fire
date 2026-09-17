@@ -46,9 +46,9 @@ changes, so the labels do not stay stuck to names derived from the hub.
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `No module named 'mcp'` / MCP tools missing | the `mcp` extra is missing | `uv tool install "graphifyy[mcp,gemini]==0.9.55" --force` and **restart DSH** |
-| `No LLM provider configured` / `'openai' package is required` | the `gemini` extra is missing, or the wrapper was overwritten | run `install/install-graphify.sh` from the `dsh-on-fire` clone — it reinstalls `[mcp,gemini]` and rewrites the wrapper at `~/.local/bin/graphify` |
+| `No module named 'mcp'` / MCP tools missing | the `mcp` extra is missing | `uv tool install "graphifyy[mcp,gemini,sql]==0.9.55" --force` and **restart DSH** |
+| `No LLM provider configured` / `'openai' package is required` | the `gemini` extra is missing, or the wrapper was overwritten | run `install/install-graphify.sh` from the `dsh-on-fire` clone — it reinstalls `[mcp,gemini,sql]` and rewrites the wrapper at `~/.local/bin/graphify` |
 | Labels turned into "Community N" | `label` ran without a key | check `~/.config/graphify/gemini.key` and run `graphify label .` |
 
-**Installing with one extra DELETES the others** — the correct set is `[mcp,gemini]`. Any
+**Installing with one extra DELETES the others** — the correct set is `[mcp,gemini,sql]`. Any
 `uv tool install|upgrade` also **overwrites the wrapper** at `~/.local/bin/graphify`.
