@@ -1,6 +1,6 @@
 ---
 name: browser-harness
-description: "Always use browser-harness for any web interaction: automation, scraping, testing, or site/app work."
+description: "Control a real browser over CDP: clicking, typing, navigation, logged-in sessions, JS-rendered or bot-protected pages. Not for plain HTTP fetches of public content — use curl for those."
 ---
 
 # browser-harness
@@ -66,11 +66,17 @@ PY
 
 - Invoke as `browser-harness`. Use heredocs for multi-line commands.
 - Helpers are pre-imported. `run.py` calls `ensure_daemon()` before `exec`.
-- First navigation is `new_tab(url)`, not `goto_url(url)`.
+- First navigation **of a task** is `new_tab(url)`, not `goto_url(url)`. The daemon keeps the attached
+  tab across separate CLI invocations, so do not call `new_tab()` again in every script.
+- Keep one working tab per task or site. Before opening another, look at `current_tab()` and
+  `list_tabs()` and reuse a matching one with `switch_tab()`. Do not leave duplicate tabs on the same
+  URL, and do not close tabs you did not create — the user's own tabs are in there.
 - `new_tab()` and `switch_tab()` attach and move the horse marker without
   changing Chrome's visible tab. Screenshots and normal CDP input work in the
   background; call `activate_tab(target)` only when the user explicitly asks
   or a page demonstrably pauses rendering while hidden.
+- The horse marker renames page titles. Set `BH_TAB_MARKER=0` **before starting the daemon** to
+  leave them untouched.
 - The normal local flow attaches to the running Chrome/Chromium CDP endpoint. No browser ids or local profile selection.
 
 ## Local Chrome
@@ -215,7 +221,16 @@ recording path while the main agent returns the task result.
 ## Gotchas
 
 - `chrome://inspect/#remote-debugging` must be enabled for local Chrome control.
-- On macOS, if Chrome shows an "Allow remote debugging?" popup, run `browser-harness mac-approve`. Do not poll in a loop — the daemon holds one connection.
+- On macOS, if local Chrome shows an "Allow remote debugging?" popup, keep the original command
+  running and call `mac-approve` **once** in another shell, preserving the exact daemon name
+  (`BU_NAME=r7k2 browser-harness mac-approve`). Do not poll and do not rerun the browser command.
+  Remote and cloud browsers never use this helper.
+- A timed-out `scroll(...)` on an attached background tab is evidence the page needs to be visible:
+  call `activate_tab(current_tab())`, retry the same scroll once, then re-read the position. It
+  switches tabs visibly, so skip it when the user has forbidden foreground changes. Do not invent a
+  `Runtime.evaluate` scroll replacement or a cross-frame JS walker.
+- Entering unusually long text: do not type it character by character. Find a faster input method the
+  page supports, then verify the page kept the exact value.
 - Omnibox popups are not real work tabs.
 - CDP target order is not Chrome's visible tab-strip order.
 - `BU_CDP_URL` is an HTTP DevTools endpoint; the daemon resolves it to WebSocket.
