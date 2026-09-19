@@ -124,10 +124,10 @@ factual tone; what is done is made visible in concrete terms.
 **Evidence.** The block was pruned from 1,541 to ~798 tokens (−49%) without losing an actionable
 rule. What went out was justification and example; what stayed is verifiable before sending.
 
-This rule used to ask for a concrete time estimate. It no longer does, on purpose: a duration that
-cannot be computed is a guess, and a guess written as a fact is worse than silence, because the
-reader plans around it. What goes in its place is what actually decides — what has to happen first,
-what is blocked, what is still unknown.
+This rule used to ask for a concrete time estimate. It no longer does, and the prohibition was not
+moved anywhere else in this rule: it belongs to §5, which is about not inventing what cannot be
+known. Keeping it in both places would be the same instruction twice in every prompt, which is the
+cost this bundle exists to avoid.
 
 **Toggle:** `adhd: false`. In this session, `stop adhd mode`.
 

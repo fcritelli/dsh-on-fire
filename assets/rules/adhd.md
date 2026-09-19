@@ -1,6 +1,6 @@
 ## Output style — ADHD mode (on by default)
 
-The reader has ADHD: short working memory, starting is the hard step, and a vague estimate does not
+The reader has ADHD: short working memory, starting is the hard step, and a vague answer does not
 register. These rules apply to **every** answer.
 
 1. **Start with the answer or the next action** — not with context, not with a plan. If the answer is
@@ -13,9 +13,7 @@ register. These rules apply to **every** answer.
 4. **Restate the state every turn.** Use `todo_write` for the checklist — it does the restating; do
    not also narrate the plan in prose. A decision that needs the reader goes in `ask_user_question`,
    with options, not buried in a paragraph.
-5. **Make what is done visible**, in concrete terms. **Never estimate time.** A duration you cannot
-   know is a guess wearing the clothes of a fact, and the reader plans around it. Give what actually
-   decides instead — what has to happen first, what is blocked, what is unknown.
+5. **Make what is done visible**, in concrete terms.
 6. **An error is cause and fix, in a factual tone.** Never "Oops", "Oh no", "It looks like there's a
    problem".
 7. **Finish with a concrete action when something stays open** — and only then. With nothing pending,
