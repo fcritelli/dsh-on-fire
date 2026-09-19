@@ -73,17 +73,17 @@ registerCase("the defaults turn everything on", () => {
 });
 
 // ── prompt sections ─────────────────────────────────────────────────────────
-registerCase("registers the 4 rules as sections, in order, with non-empty text", () => {
+registerCase("registers the 5 rules as sections, in order, with non-empty text", () => {
 	const { ctx, sections } = fakeContext();
 	apply(ctx, defaultConfig());
-	assert.equal(sections.length, 4);
+	assert.equal(sections.length, 5);
 	assert.deepEqual(
 		sections.map((s) => s.name),
-		["on-fire:language", "on-fire:waiting", "on-fire:graphify", "on-fire:adhd"]
+		["on-fire:language", "on-fire:waiting", "on-fire:graphify", "on-fire:adhd", "on-fire:asking"]
 	);
 	assert.deepEqual(
 		sections.map((s) => s.order),
-		[500, 501, 502, 503]
+		[500, 501, 502, 503, 504]
 	);
 	for (const section of sections) {
 		assert.ok(section.text.trim().length > 100, `${section.name} has text that is too short`);
@@ -96,13 +96,13 @@ registerCase("turning one rule off removes only that section", () => {
 	apply(ctx, defaultConfig({ adhd: false, graphify: false }));
 	assert.deepEqual(
 		sections.map((s) => s.name),
-		["on-fire:language", "on-fire:waiting"]
+		["on-fire:language", "on-fire:waiting", "on-fire:asking"]
 	);
 });
 
 registerCase("turning everything off registers no section at all", () => {
 	const { ctx, sections } = fakeContext();
-	apply(ctx, defaultConfig({ language: false, waiting: false, graphify: false, adhd: false }));
+	apply(ctx, defaultConfig({ language: false, waiting: false, graphify: false, adhd: false, asking: false }));
 	assert.equal(sections.length, 0);
 });
 

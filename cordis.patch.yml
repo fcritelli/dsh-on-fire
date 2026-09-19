@@ -18,6 +18,7 @@
         waiting: true
         graphify: true
         adhd: true
+        asking: true
         skills: true
         disabledSkills: []
 

@@ -14,18 +14,19 @@ and a rule of taste does not survive review.
 | 2 | Wait for subagent/job by notification | prompt section | `waiting: false` |
 | 3 | Graph before, graph after | prompt section | `graphify: false` |
 | 4 | ADHD output style | prompt section | `adhd: false` |
-| 5 | Skill `project-constitution` | skill (rank 600) | `disabledSkills: [project-constitution]` |
-| 6 | Skill `implementation-plans` | skill (rank 600) | `disabledSkills: [implementation-plans]` |
-| 7 | Skill `plan-quality` | skill (rank 600) | `disabledSkills: [plan-quality]` |
-| 8 | Skill `plan-execution` | skill (rank 600) | `disabledSkills: [plan-execution]` |
-| 9 | Skill `test-quality` | skill (rank 600) | `disabledSkills: [test-quality]` |
-| 10 | Skill `browser-harness` | skill (rank 600) | `disabledSkills: [browser-harness]` |
-| 11 | Skill `i-have-adhd` | skill (rank 600) | `disabledSkills: [i-have-adhd]` |
-| 12 | MCP server `graphify` | row `mcp-graphify` | remove the row, or `disabled: true` |
-| 13 | MCP server `lgpd` | row `mcp-lgpd` | remove the row, or `disabled: true` |
-| 14 | graphify wrapper + key | `install/` (machine-local) | don't run the script |
+| 5 | Don't guess — ask | prompt section | `asking: false` |
+| 6 | Skill `project-constitution` | skill (rank 600) | `disabledSkills: [project-constitution]` |
+| 7 | Skill `implementation-plans` | skill (rank 600) | `disabledSkills: [implementation-plans]` |
+| 8 | Skill `plan-quality` | skill (rank 600) | `disabledSkills: [plan-quality]` |
+| 9 | Skill `plan-execution` | skill (rank 600) | `disabledSkills: [plan-execution]` |
+| 10 | Skill `test-quality` | skill (rank 600) | `disabledSkills: [test-quality]` |
+| 11 | Skill `browser-harness` | skill (rank 600) | `disabledSkills: [browser-harness]` |
+| 12 | Skill `i-have-adhd` | skill (rank 600) | `disabledSkills: [i-have-adhd]` |
+| 13 | MCP server `graphify` | row `mcp-graphify` | remove the row, or `disabled: true` |
+| 14 | MCP server `lgpd` | row `mcp-lgpd` | remove the row, or `disabled: true` |
+| 15 | graphify wrapper + key | `install/` (machine-local) | don't run the script |
 
-All options 1–11 are written in the config of the `on-fire` row, in your patch layer:
+All options 1–12 are written in the config of the `on-fire` row, in your patch layer:
 
 ```yaml
 # ~/.dsh/cordis.patch.yml
@@ -118,15 +119,38 @@ symbol, not from a smaller budget.
 
 Start with the answer or the next action; no preamble, no recap, no sign-off; multi-step work
 becomes a numbered list; the state is restated every turn; an error is cause and correction in a
-factual tone; an estimate is concrete ("about 15 minutes if the tests cover this; an afternoon if
-not").
+factual tone; what is done is made visible in concrete terms.
 
 **Evidence.** The block was pruned from 1,541 to ~798 tokens (−49%) without losing an actionable
 rule. What went out was justification and example; what stayed is verifiable before sending.
 
+This rule used to ask for a concrete time estimate. It no longer does, on purpose: a duration that
+cannot be computed is a guess, and a guess written as a fact is worse than silence, because the
+reader plans around it. What goes in its place is what actually decides — what has to happen first,
+what is blocked, what is still unknown.
+
 **Toggle:** `adhd: false`. In this session, `stop adhd mode`.
 
-## 5–11. The seven skills
+## 5. Don't guess — ask
+
+Say when you do not know, and ask, instead of inventing. Four shapes of guessing, all of which read
+as fact to the reader: **a number you cannot know** (time, cost, size); **a choice that belongs to
+the reader** (which design, which scope, which repository, which priority); **a scope you assumed**
+(which repos, which environment, whether to also fix the sibling caller); **an intent you inferred**
+(a request that could mean two things).
+
+The line that keeps this from becoming an interrogation: **ask when the answer is the reader's to
+give, and never ask what inspection answers.** Where a file lives, how a function behaves, what the
+tests cover, whether a tool exists — find out, then act. A question you could have answered yourself
+spends the reader's attention and returns nothing.
+
+**Evidence.** This one is not a measurement, it is a correction the user asked for, after a session
+in which estimates of effort were produced for work whose size was genuinely unknown. The rule
+exists so the failure is not repeated by default.
+
+**Toggle:** `asking: false`.
+
+## 6–12. The seven skills
 
 All with rank 600, all overridable by a local copy of the same name.
 
@@ -174,7 +198,7 @@ original project are empty drafts; the skill brings only what works, verified.
 `/i-have-adhd`. That is why it does **not** show up when you ask the agent which skills it has —
 correct behavior, verified on the real host.
 
-## 12. MCP server `graphify`
+## 13. MCP server `graphify`
 
 Registers the MCP server of the local knowledge graph. The tools appear as `mcp__graphify__*` and
 work in multi-project mode: each call receives `project_path` with the absolute path of the
@@ -197,7 +221,7 @@ path of this machine into your layer, because the PATH of the DSH host is usuall
 
 **Toggle:** remove the `mcp-graphify` row from your layer, or set `disabled: true`.
 
-## 13. MCP server `lgpd`
+## 14. MCP server `lgpd`
 
 Support for compliance with the LGPD (Lei 13.709/2018). Tools in `mcp__lgpd__*`:
 `validar_base_legal`, `verificar_consentimento`, `gerar_modelo_consentimento`,
@@ -210,7 +234,7 @@ repeating here.
 
 **Toggle:** remove the `mcp-lgpd` row from your layer, or set `disabled: true`.
 
-## 14. The graphify wrapper and the key
+## 15. The graphify wrapper and the key
 
 `~/.local/bin/graphify` is a wrapper that reads the Gemini key from
 `~/.config/graphify/gemini.key` (mode 600) and exports it before calling the real binary. It exists

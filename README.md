@@ -11,7 +11,7 @@ with the reason — are in [`docs/EVALUATIONS.md`](./docs/EVALUATIONS.md).
 
 ## What comes inside
 
-**Four behavior rules**, as prompt sections that apply in every session and every workspace:
+**Five behavior rules**, as prompt sections that apply in every session and every workspace:
 
 | Rule | What it does |
 |---|---|
@@ -19,6 +19,7 @@ with the reason — are in [`docs/EVALUATIONS.md`](./docs/EVALUATIONS.md).
 | `waiting` | wait for a subagent/job by notification or by one call with `wait`, never in a loop |
 | `graphify` | query the graph first, sync afterwards, and never read the raw `graph.json` |
 | `adhd` | output style for a reader with ADHD |
+| `asking` | say when you do not know and ask, instead of inventing numbers, scopes and choices |
 
 **Seven skills:**
 
@@ -61,7 +62,7 @@ the bundle's portable `command`s (`graphify-mcp`, `npx`) and graphify won't have
 `pnpm` warns `missing peer @deepseek-ai/cordis` and `missing peer @deepseek-ai/dsh-skill`. The warning is
 expected and harmless: `dsh-base` already brings those two packages into the profile tree, and that is where
 `dsh-on-fire` resolves them from at runtime. Verified by installing from GitHub into a clean profile and
-booting: the four rules and the seven skills load.
+booting: the five rules and the seven skills load.
 
 ### Verify
 
@@ -88,6 +89,7 @@ All options are written in your patch layer, targeting the `on-fire` row by id:
     waiting: true
     graphify: true
     adhd: false              # turned off the ADHD style
+    asking: true
     skills: true
     disabledSkills: [browser-harness]
 ```
